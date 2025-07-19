@@ -1,0 +1,230 @@
+# Laravel Task Manager
+
+A simple and intuitive task management web application built with Laravel. Features include task creation, editing, deletion, drag-and-drop reordering, and project-based organization.
+
+## Features
+
+- ✅ Create, edit, and delete tasks
+- 🎯 Automatic priority management
+- 🖱️ Drag-and-drop task reordering
+- 📁 Project-based task organization
+- 📱 Responsive design with Tailwind CSS
+- 🕒 Automatic timestamps tracking
+- 🔍 Filter tasks by project
+
+## Requirements
+
+- PHP 8.1 or higher
+- Composer
+- MySQL 5.7+ or MariaDB 10.3+
+- Node.js & NPM (for asset compilation, optional)
+
+## Installation & Setup
+
+### 1. Clone the Repository
+
+```bash
+git clone <repository-url>
+cd laravel-task-manager
+```
+
+### 2. Install Dependencies
+
+```bash
+composer install
+```
+
+### 3. Environment Configuration
+
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+
+### 4. Database Configuration
+
+Edit your `.env` file with your MySQL database credentials:
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=task_manager
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
+```
+
+### 5. Create Database
+
+Create a MySQL database named `task_manager` (or whatever you specified in DB_DATABASE):
+
+```sql
+CREATE DATABASE task_manager;
+```
+
+### 6. Run Migrations and Seeders
+
+```bash
+php artisan migrate --seed
+```
+
+This will create the necessary tables and populate them with sample data.
+
+### 7. Start the Development Server
+
+```bash
+php artisan serve
+```
+
+The application will be available at `http://localhost:8000`
+
+## Usage
+
+### Managing Tasks
+
+1. **Create Task**: Use the form at the top of the tasks page to add new tasks
+2. **Edit Task**: Click the "Edit" link next to any task
+3. **Delete Task**: Click the "Delete" link (with confirmation)
+4. **Reorder Tasks**: Drag and drop tasks to change their priority order
+
+### Managing Projects
+
+1. **Create Project**: Use the form on the projects page
+2. **View Project Tasks**: Click "View Tasks" to see only tasks for that project
+3. **Edit Project**: Click "Edit" to modify project details
+4. **Delete Project**: Click "Delete" (this will also delete all associated tasks)
+
+### Project Filtering
+
+- Use the dropdown filter on the tasks page to view tasks for a specific project
+- Select "All Projects" to view all tasks regardless of project
+
+## Database Schema
+
+### Projects Table
+- `id` - Primary key
+- `name` - Project name
+- `description` - Optional project description
+- `created_at` / `updated_at` - Timestamps
+
+### Tasks Table
+- `id` - Primary key
+- `name` - Task name
+- `priority` - Integer priority (1 = highest priority)
+- `project_id` - Foreign key to projects table (nullable)
+- `created_at` / `updated_at` - Timestamps
+
+## Technical Implementation
+
+### Drag-and-Drop Functionality
+
+The application uses [SortableJS](https://sortablejs.github.io/Sortable/) for drag-and-drop functionality. When tasks are reordered:
+
+1. JavaScript captures the new order
+2. An AJAX request is sent to `/tasks/reorder`
+3. The server updates priority values in the database
+4. The UI is updated to reflect new priorities
+
+### Priority Management
+
+- New tasks automatically get the next available priority
+- When tasks are reordered, priorities are recalculated (1, 2, 3, etc.)
+- Priority 1 is the highest priority (appears at the top)
+
+### Laravel Best Practices
+
+- **Models**: Eloquent models with proper relationships
+- **Controllers**: RESTful resource controllers
+- **Validation**: Form request validation
+- **Database**: Proper migrations and seeders
+- **Routing**: Named routes following Laravel conventions
+- **Views**: Blade templating with layout inheritance
+
+## Deployment
+
+### Production Setup
+
+1. **Server Requirements**: Ensure your server meets Laravel's requirements
+2. **Environment**: Set `APP_ENV=production` and `APP_DEBUG=false`
+3. **Database**: Create production database and run migrations
+4. **Web Server**: Configure Apache/Nginx to point to the `public` directory
+5. **Permissions**: Set proper file permissions for storage and cache directories
+
+### Example Apache Virtual Host
+
+```apache
+<VirtualHost *:80>
+    ServerName yourdomain.com
+    DocumentRoot /path/to/laravel-task-manager/public
+
+    <Directory /path/to/laravel-task-manager/public>
+        AllowOverride All
+        Require all granted
+    </Directory>
+</VirtualHost>
+```
+
+### File Permissions
+
+```bash
+sudo chown -R www-data:www-data /path/to/laravel-task-manager
+sudo chmod -R 755 /path/to/laravel-task-manager
+sudo chmod -R 775 /path/to/laravel-task-manager/storage
+sudo chmod -R 775 /path/to/laravel-task-manager/bootstrap/cache
+```
+
+## API Endpoints
+
+- `GET /` - Task list with optional project filtering
+- `POST /tasks` - Create new task
+- `GET /tasks/{task}/edit` - Edit task form
+- `PUT /tasks/{task}` - Update task
+- `DELETE /tasks/{task}` - Delete task
+- `POST /tasks/reorder` - Reorder tasks (AJAX)
+- `GET /projects` - Project list
+- `POST /projects` - Create new project
+- `GET /projects/{project}/edit` - Edit project form
+- `PUT /projects/{project}` - Update project
+- `DELETE /projects/{project}` - Delete project
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
+
+## License
+
+This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```
+
+This Laravel task management application includes all the requested features:
+
+✅ **Core Features:**
+- Create, edit, delete tasks with name, priority, and timestamps
+- Drag-and-drop reordering with automatic priority updates
+- MySQL database storage
+
+✅ **Bonus Features:**
+- Project functionality with dropdown filtering
+- Clean, responsive UI with Tailwind CSS
+
+✅ **Laravel Best Practices:**
+- Proper MVC architecture
+- Eloquent models with relationships
+- Resource controllers
+- Form validation
+- Blade templating
+- Database migrations and seeders
+
+✅ **Additional Features:**
+- Sample data seeding
+- Comprehensive README with setup instructions
+- AJAX-powered drag-and-drop
+- Responsive design
+- Proper error handling and user feedback
+
+The application follows Laravel conventions and includes comprehensive setup instructions for both development and production environments.
+
