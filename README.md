@@ -1,4 +1,4 @@
-# Laravel Task Manager
+# Task Manager
 
 A simple task management application which is built with Laravel. The main features includes task creation, editing, deletion, drag & drop reordering, and project-based organization.
 
