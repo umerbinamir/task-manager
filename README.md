@@ -1,61 +1,131 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Laravel Task Manager
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A simple task management application which is built with Laravel. The main features includes task creation, editing, deletion, drag & drop reordering, and project-based organization.
 
-## About Laravel
+## Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- Create, edit, and delete tasks
+- Automatic priority management
+- Drag-and-drop task reordering
+- Project-based task organization
+- Responsive design with Tailwind CSS
+- Automatic timestamps tracking
+- Filter tasks by project
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Requirements
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- PHP (Xampp)
+- Composer
+- MySQL
 
-## Learning Laravel
+## Installation & Setup
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 1. Clone the Repository
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+```bash
+git clone https://github.com/umerbinamir/task-manager.git
+cd task-manager
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 2. Install Dependencies
 
-## Laravel Sponsors
+```bash
+composer install
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 3. Environment Configuration
 
-### Premium Partners
+```bash
+cp .env.example .env
+php artisan key:generate
+```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### 4. Database Configuration
 
-## Contributing
+Edit your `.env` file with your MySQL database credentials:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=task_manager
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
+```
 
-## Code of Conduct
+### 5. Create Database
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Create a MySQL database named `task_manager` (or whatever you specified in DB_DATABASE):
 
-## Security Vulnerabilities
+```sql
+CREATE DATABASE task_manager;
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 6. Run Migrations and Seeders
 
-## License
+```bash
+php artisan migrate --seed
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This will create the necessary tables and populate them with sample data.
+
+### 7. Start the Development Server
+
+```bash
+php artisan serve
+```
+
+The application will be available at `http://localhost:8000`
+
+## Usage
+
+### Managing Tasks
+
+1. **Create Task**: Use the form at the top of the tasks page to add new tasks
+2. **Edit Task**: Click the "Edit" link next to any task
+3. **Delete Task**: Click the "Delete" link (with confirmation)
+4. **Reorder Tasks**: Drag and drop tasks to change their priority order
+
+### Managing Projects
+
+1. **Create Project**: Use the form on the projects page
+2. **View Project Tasks**: Click "View Tasks" to see only tasks for that project
+3. **Edit Project**: Click "Edit" to modify project details
+4. **Delete Project**: Click "Delete" (this will also delete all associated tasks)
+
+### Project Filtering
+
+- Use the dropdown filter on the tasks page to view tasks for a specific project
+- Select "All Projects" to view all tasks regardless of project
+
+## Database Schema
+
+### Projects Table
+- `id` - Primary key
+- `name` - Project name
+- `description` - Optional project description
+- `created_at` / `updated_at` - Timestamps
+
+### Tasks Table
+- `id` - Primary key
+- `name` - Task name
+- `priority` - Integer priority (1 = highest priority)
+- `project_id` - Foreign key to projects table (nullable)
+- `created_at` / `updated_at` - Timestamps
+
+## Technical Implementation
+
+### Drag-and-Drop Functionality
+
+The application uses [SortableJS](https://sortablejs.github.io/Sortable/) for drag-and-drop functionality. When tasks are reordered:
+
+1. JavaScript captures the new order
+2. when an AJAX request is sent to `/tasks/reorder`
+3. The server updates priority values in the database
+4. The UI is updated to reflect new priorities.
+
+### Priority Management
+
+- The new tasks automatically get the next available priority
+- When user reorder the tasks, all priorities are recalculated like 1, 2, 3, etc.
+- Priority 1 is the highest priority which appears at the top.
